@@ -19,6 +19,7 @@ def listar_professores(request): #Só usa as requisições acima, do decorator
             return Response(serializer.data, status=status.HTTP_201_CREATED) #Retorna os dados serializados e o status 201
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) #Retorna os erros e o status 400
+            
 class ProfessoresView(ListCreateAPIView):
     queryset = Professor.objects.all()
     serializer_class = ProfessorSerializer #Serializer em formato de formulário
@@ -26,3 +27,4 @@ class ProfessoresView(ListCreateAPIView):
 class ProfessoresDetailView(RetrieveUpdateDestroyAPIView):
     queryset = Professor.objects.all()
     serializer_class = ProfessorSerializer
+
