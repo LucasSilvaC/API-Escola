@@ -57,7 +57,7 @@ export default function Login() {
             </form>
 
             <button onClick={() => {navigate("/"); }}>Voltar</button>
-            <button  onClick={() => {logar()}}>Login</button>
+            <button  onClick={() => {navigate("/");logar()}}>Login</button>
         </section>
     );
 }

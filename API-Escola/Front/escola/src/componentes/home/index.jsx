@@ -5,6 +5,7 @@ import Header from "../header/header";
 import { FaTrash, FaSearch } from "react-icons/fa";
 import { MdCreate } from "react-icons/md";
 import { IoReaderSharp } from "react-icons/io5";
+import { FaPlus } from "react-icons/fa";
 
 export default function Home() {
     const [dados, setDados] = useState([]);
@@ -30,12 +31,30 @@ export default function Home() {
         };
 
         fetchData();
-    }, [token]);
+    }, [token,dados]);
+
+    const apagar = async (id) => {
+        if (window.confirm("Deseja realmente apagar?")) {
+            try {
+                await axios.delete(`http://127.0.0.1:8000/api/professor/${id}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                setDados(dados.filter((dado) => dado.ni !== id));
+            } catch (error) {
+                console.log("Erro ao apagar dados:", error);
+            }
+        }
+    };
 
     return (
         <>
             <Header />
             <h2>Lista de Professores</h2>
+            <FaPlus className="icon" />
+            <IoReaderSharp className="icon" /><br />
+            <input type="text" placeholder="Buscar professor..." />
             <table>
                 <thead>
                     <tr>
@@ -50,12 +69,7 @@ export default function Home() {
                 <tbody>
                     {dados.map((dado) => (
                         <tr key={dado.ni}>
-                            <td>
-                                <FaSearch className="icon" /> 
-                                <FaTrash className="icon" /> 
-                                <MdCreate className="icon" /> 
-                                <IoReaderSharp className="icon" />
-                            </td>
+                            <td><FaTrash className="icon" onClick={() => apagar(dado.id)} />  <MdCreate className="icon" /></td>
                             <td>{dado.ni}</td>
                             <td>{dado.nome}</td>
                             <td>{dado.email}</td>
