@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from .models import Professor, Disciplina
-from .serializers import ProfessorSerializer, DisciplinaSerializer
+from .models import Professor, Disciplina, Curso, Turma, Ambiente
+from .serializers import ProfessorSerializer, DisciplinaSerializer, CursoSerializer, AmbienteSerializer, TurmaSerializer
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes 
@@ -8,6 +8,7 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
+# PROFESSORES
 @api_view(['GET','POST']) #Decorator é pra definir qual tipo de requisição(GET,POST) e o metódo
 @permission_classes([IsAuthenticated])
 def listar_professores(request): #Só usa as requisições acima, do decorator
@@ -22,7 +23,18 @@ def listar_professores(request): #Só usa as requisições acima, do decorator
             return Response(serializer.data, status=status.HTTP_201_CREATED) #Retorna os dados serializados e o status 201
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) #Retorna os erros e o status 400
-        
+            
+class ProfessoresView(ListCreateAPIView):
+    queryset = Professor.objects.all()
+    serializer_class = ProfessorSerializer #Serializer em formato de formulário
+    permission_classes = [IsAuthenticated]
+
+class ProfessoresDetailView(RetrieveUpdateDestroyAPIView):
+    queryset = Professor.objects.all()
+    serializer_class = ProfessorSerializer
+    permission_classes = [IsAuthenticated]
+
+# DISCIPLINAS
 @api_view(['GET','POST']) 
 @permission_classes([IsAuthenticated])
 def listar_disciplinas(request): 
@@ -37,18 +49,29 @@ def listar_disciplinas(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED) 
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
-            
-class ProfessoresView(ListCreateAPIView):
-    queryset = Professor.objects.all()
-    serializer_class = ProfessorSerializer #Serializer em formato de formulário
-    permission_classes = [IsAuthenticated]
-
-class ProfessoresDetailView(RetrieveUpdateDestroyAPIView):
-    queryset = Professor.objects.all()
-    serializer_class = ProfessorSerializer
-    permission_classes = [IsAuthenticated]
 
 class DisciplinaDetailView(RetrieveUpdateDestroyAPIView):
     queryset = Disciplina.objects.all()
     serializer_class = DisciplinaSerializer
     permission_classes = [IsAuthenticated]
+
+# CURSOS
+@api_view(['GET','POST']) 
+@permission_classes([IsAuthenticated])
+def curso_disciplinas(request): 
+    if request.method == 'GET':
+        queryset = Curso.objects.all() 
+        serializer = CursoSerializer(queryset, many=True)  
+        return Response(serializer.data) 
+    elif request.method == 'POST':
+        serializer = CursoSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED) 
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+
+class CursoDetailView(RetrieveUpdateDestroyAPIView):
+    queryset = Disciplina.objects.all()
+    serializer_class = DisciplinaSerializer
+    permission_classes = [IsAuthenticated]    
