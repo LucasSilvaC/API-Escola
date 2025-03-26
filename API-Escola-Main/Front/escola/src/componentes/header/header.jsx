@@ -8,6 +8,7 @@ export default function Header() {
             <h1>Escola</h1>
             <ul>
                 <li onClick={() => navigate("/home")}>Home</li>
+                <li onClick={() => navigate("/register")}>Registrar</li>
                 <li onClick={() => navigate("/login")}>Login</li>
                 <li onClick={() => navigate("/subject")}>Disciplinas</li>
                 <li onClick={() => navigate("/ambiente")}>Ambientes</li>

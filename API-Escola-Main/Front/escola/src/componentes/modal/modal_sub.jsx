@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 
 const ModalDisciplinas = ({
-    isOpen = false, 
-    onClose = () => {}, 
-    disciplinaSelecionada, 
+    isOpen = false,
+    onClose = () => { },
+    disciplinaSelecionada,
     criar,
     atualizar,
 }) => {
@@ -26,7 +26,7 @@ const ModalDisciplinas = ({
                 sigla: disciplinaSelecionada.sigla || "",
                 cod_sigla: disciplinaSelecionada.cod_sigla || "",
                 carga_horaria: disciplinaSelecionada.carga_horaria || "",
-                professor: disciplinaSelecionada.professor || "", 
+                professor: disciplinaSelecionada.professor ? String(disciplinaSelecionada.professor) : "",
             });
         } else {
             setFormData({
@@ -38,7 +38,7 @@ const ModalDisciplinas = ({
                 professor: "",
             });
         }
-    }, [disciplinaSelecionada]); 
+    }, [disciplinaSelecionada]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -50,11 +50,20 @@ const ModalDisciplinas = ({
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        const disciplinaCorrigida = {
+            ...formData,
+            professor: formData.professor ? Number(formData.professor) : null,
+        };
+
+        console.log("Enviando dados para criação:", disciplinaCorrigida);
+
         if (disciplinaSelecionada) {
-            atualizar({ ...disciplinaSelecionada, ...formData });
+            atualizar(disciplinaCorrigida);
         } else {
-            criar(formData);
+            criar(disciplinaCorrigida);
         }
+
         onClose();
     };
 
@@ -62,7 +71,7 @@ const ModalDisciplinas = ({
         <div className="container-modal">
             <div className="modal">
                 <button className="close-button" onClick={onClose}>X</button>
-                
+
                 <h2>{disciplinaSelecionada ? "Editar Disciplina" : "Cadastrar Disciplina"}</h2>
 
                 <form onSubmit={handleSubmit} className="container-input">
@@ -104,7 +113,7 @@ const ModalDisciplinas = ({
                     /> <br />
 
                     <input
-                        type="text"
+                        type="number"
                         name="professor"
                         placeholder="ID do Professor"
                         value={formData.professor}

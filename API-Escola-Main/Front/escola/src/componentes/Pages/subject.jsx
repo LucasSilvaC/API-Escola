@@ -65,6 +65,7 @@ export default function Disciplina() {
             console.error("Erro ao criar disciplina:", error.response ? error.response.data : error.message);
         }
     };
+    
 
     const atualizar = async (disciplinaAtualizada) => {
         try {
@@ -102,7 +103,7 @@ export default function Disciplina() {
                 placeholder="Buscar ID..."
                 value={filtroId}
                 onChange={(e) => setFiltroId(e.target.value)}
-            />
+            /><br />
             <input
                 type="text"
                 placeholder="Buscar disciplina..."

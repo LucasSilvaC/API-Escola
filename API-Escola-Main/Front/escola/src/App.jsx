@@ -7,6 +7,7 @@ import Home from './componentes/Pages/home';
 import Curso from './componentes/Pages/cursos.jsx';
 import Turma from './componentes/Pages/turmas.jsx';
 import Ambiente from './componentes/Pages/ambientes';
+import Registrar from './componentes/Pages/register';
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
         <Route path="/ambiente" element={<Ambiente />} />
         <Route path="/cursos" element={<Curso />} />
         <Route path="/turmas" element={<Turma />} />
+        <Route path="/register" element={<Registrar />} />
       </Routes>
     </Router>
   );

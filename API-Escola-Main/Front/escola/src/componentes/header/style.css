@@ -2,10 +2,11 @@ header ul li{
     list-style: none;
     cursor: pointer;
     font-size: 1.34rem;
+    color: rgba(255, 255, 255, 0.87);
 }
 
 header ul li:hover{
-    color: black;
+    color: rgb(123, 115, 115);
 }
 
 header{

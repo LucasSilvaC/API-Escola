@@ -55,19 +55,32 @@ export default function Home() {
     };
 
     const criar = async (novoProfessor) => {
+        console.log("Enviando dados para criação/atualização do professor:", novoProfessor);
         try {
-            const response = await axios.post('http://127.0.0.1:8000/api/professores',
-                novoProfessor,
-                {
-                    headers: { Authorization: `Bearer ${token}` }
+            const formData = new FormData();
+            formData.append("nome", novoProfessor.nome);
+            formData.append("email", novoProfessor.email);
+            formData.append("tel", novoProfessor.tel);
+            formData.append("ocupacao", novoProfessor.ocupacao);
+            formData.append("carga_horaria_prof", novoProfessor.carga_horaria_prof);
+            
+            if (novoProfessor.foto) {
+                formData.append("foto", novoProfessor.foto);
+            }
+            
+            const response = await axios.post('http://127.0.0.1:8000/api/professores', formData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data' 
                 }
-            );
+            });
+    
             setDados([...dados, response.data]); 
             setmodalOpen(false);
         } catch (error) {
             console.log("Erro ao criar professor:", error.response ? error.response.data : error.message);
         }        
-    };    
+    };
 
     const atualizar = async (ProfessorAtualizado) => {
         try {
@@ -114,7 +127,6 @@ export default function Home() {
                             <td>
                                 <FaTrash className="icon" onClick={() => apagar(dado.id)} />
                                 <MdCreate className="icon" onClick={() => {
-                                    console.log("Selecionado:", dado);
                                     setmodalOpen(true);
                                     setProfessorSelecionado(dado);
                                 }} />

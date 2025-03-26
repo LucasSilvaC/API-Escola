@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function Login() {
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
     const [password, setPassword] = useState('');
     const [user, setUser] = useState('');
 
@@ -35,30 +35,30 @@ export default function Login() {
             justifyContent: "center"
         }}>
             <h1>Login</h1>
-            <form onSubmit={logar}> 
+            <form onSubmit={logar}>
                 <label htmlFor="name">
                     <span>Usuário:</span>
                 </label><br />
-                <input 
-                    type="text" 
-                    name="nome" 
-                    autoComplete="off" 
-                    required 
-                    placeholder='Digite seu nome' 
-                    value={user} 
-                    onChange={(e) => setUser(e.target.value)}  
+                <input
+                    type="text"
+                    name="nome"
+                    autoComplete="off"
+                    required
+                    placeholder="Digite seu nome"
+                    value={user}
+                    onChange={(e) => setUser(e.target.value)}
                 /><br />
                 <label htmlFor="password">
                     <span>Senha:</span>
                 </label><br />
-                <input 
-                    type="password" 
-                    name="senha" 
-                    autoComplete="off" 
-                    required 
-                    placeholder='Digite sua senha' 
-                    value={password} 
-                    onChange={(e) => setPassword(e.target.value)} 
+                <input
+                    type="password"
+                    name="senha"
+                    autoComplete="off"
+                    required
+                    placeholder="Digite sua senha"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                 /><br />
                 <button type="submit">Login</button>
             </form>
