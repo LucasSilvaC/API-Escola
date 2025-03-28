@@ -43,7 +43,7 @@ export default function Register() {
             localStorage.setItem("token", response.data.access);
 
             alert("Cadastro e login realizados com sucesso!");
-            navigate("/"); 
+            navigate("/login"); 
         } catch (error) {
             console.error("Erro ao cadastrar:", error);
             if (error.response && error.response.data) {

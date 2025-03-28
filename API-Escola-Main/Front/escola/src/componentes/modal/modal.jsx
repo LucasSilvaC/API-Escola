@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 const ModalProfessores = ({
     isOpen = false,
-    onClose = () => {},
+    onClose = () => { },
     professorSelecionado,
     criar,
     atualizar,
@@ -11,7 +11,7 @@ const ModalProfessores = ({
 
     const [formData, setFormData] = useState({
         id: "",
-        ni: "", // Garantir que ni seja uma string e não um array
+        ni: "",
         nome: "",
         email: "",
         tel: "",
@@ -20,11 +20,13 @@ const ModalProfessores = ({
         foto: null,
     });
 
+    const [imagePreview, setImagePreview] = useState("../images/ni1.png");
+
     useEffect(() => {
         if (professorSelecionado) {
             setFormData({
                 id: professorSelecionado.id || "",
-                ni: professorSelecionado.ni ? String(professorSelecionado.ni) : "", // Garantir que ni seja sempre uma string
+                ni: professorSelecionado.ni ? String(professorSelecionado.ni) : "",
                 nome: professorSelecionado.nome || "",
                 email: professorSelecionado.email || "",
                 tel: professorSelecionado.tel || "",
@@ -32,6 +34,12 @@ const ModalProfessores = ({
                 carga_horaria_prof: professorSelecionado.carga_horaria_prof || "",
                 foto: professorSelecionado.foto || null,
             });
+    
+            if (professorSelecionado.foto) {
+                setImagePreview(`http://127.0.0.1:8000${professorSelecionado.foto}`);
+            } else {
+                setImagePreview("../images/ni1.png"); 
+            }
         } else {
             setFormData({
                 id: "",
@@ -43,16 +51,25 @@ const ModalProfessores = ({
                 carga_horaria_prof: "",
                 foto: null,
             });
+            setImagePreview("../images/ni1.png");
         }
     }, [professorSelecionado]);
-
+     
     const handleChange = (e) => {
         const { name, value, type, files } = e.target;
         if (type === "file") {
-            setFormData((prev) => ({
-                ...prev,
-                [name]: files[0],
-            }));
+            const file = files[0];
+            if (file) {
+                setFormData((prev) => ({
+                    ...prev,
+                    foto: file,
+                }));
+
+                const objectUrl = URL.createObjectURL(file);
+                setImagePreview(objectUrl);
+
+                return () => URL.revokeObjectURL(objectUrl);
+            }
         } else {
             setFormData((prev) => ({
                 ...prev,
@@ -63,18 +80,16 @@ const ModalProfessores = ({
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        
-        // Garantir que `ni` seja uma string e não um array
-        const niValue = formData.ni.trim(); // Remover espaços em branco
 
-        if (!niValue) {
-            console.log("O campo NI é obrigatório.");
+        const niValue = formData.ni.trim();
+        if (!niValue || isNaN(niValue)) {
+            console.log("O campo NI é obrigatório e deve conter apenas números.");
             return;
         }
 
         const dataToSend = {
             ...formData,
-            ni: niValue,  // Certifique-se de que ni seja uma string
+            ni: niValue,
         };
 
         console.log("Enviando dados:", dataToSend);
@@ -85,15 +100,28 @@ const ModalProfessores = ({
             criar(dataToSend);
         }
 
-        onClose();
+        handleClose();
     };
 
-    const imgsrc = formData.foto ? URL.createObjectURL(formData.foto) : "../images/ni1.png";
+    const handleClose = () => {
+        setFormData({
+            id: "",
+            ni: "",
+            nome: "",
+            email: "",
+            tel: "",
+            ocupacao: "",
+            carga_horaria_prof: "",
+            foto: null,
+        });
+        setImagePreview("../images/ni1.png");
+        onClose();
+    };
 
     return (
         <div className="container-modal-prof">
             <div className="modal">
-                <button className="close-button" onClick={onClose}>X</button>
+                <button className="close-button" onClick={handleClose}>X</button>
 
                 <h2>{professorSelecionado ? "Editar Professor" : "Cadastrar Professor"}</h2>
 
@@ -165,7 +193,7 @@ const ModalProfessores = ({
             <div className="modal">
                 <h2>Professor: {formData.nome}</h2>
                 <div className="itemframe">
-                    <img src={imgsrc} alt="Foto do Professor" />
+                    <img src={imagePreview} alt="Foto do Professor" />
                 </div>
             </div>
         </div>

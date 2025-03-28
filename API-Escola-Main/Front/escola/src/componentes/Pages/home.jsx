@@ -58,28 +58,30 @@ export default function Home() {
         console.log("Enviando dados para criação/atualização do professor:", novoProfessor);
         try {
             const formData = new FormData();
+            formData.append("ni", parseInt(novoProfessor.ni, 10)); //Garantir que seja um número
             formData.append("nome", novoProfessor.nome);
             formData.append("email", novoProfessor.email);
             formData.append("tel", novoProfessor.tel);
             formData.append("ocupacao", novoProfessor.ocupacao);
             formData.append("carga_horaria_prof", novoProfessor.carga_horaria_prof);
-            
+
             if (novoProfessor.foto) {
                 formData.append("foto", novoProfessor.foto);
             }
-            
+
+
             const response = await axios.post('http://127.0.0.1:8000/api/professores', formData, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'multipart/form-data' 
+                    'Content-Type': 'multipart/form-data'
                 }
             });
-    
-            setDados([...dados, response.data]); 
+
+            setDados([...dados, response.data]);
             setmodalOpen(false);
         } catch (error) {
             console.log("Erro ao criar professor:", error.response ? error.response.data : error.message);
-        }        
+        }
     };
 
     const atualizar = async (ProfessorAtualizado) => {
@@ -90,7 +92,7 @@ export default function Home() {
                     headers: { Authorization: `Bearer ${token}` }
                 }
             );
-    
+
             setDados(dados.map((professor) =>
                 professor.id === ProfessorAtualizado.id ? ProfessorAtualizado : professor
             ));
@@ -98,7 +100,7 @@ export default function Home() {
         } catch (error) {
             alert("Erro ao atualizar professor:", error);
         }
-    };    
+    };
 
     return (
         <>
@@ -118,7 +120,7 @@ export default function Home() {
                         <th>Email</th>
                         <th>Telefone</th>
                         <th>Ocupação</th>
-                        <th>Carga Horária</th> 
+                        <th>Carga Horária</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -136,7 +138,7 @@ export default function Home() {
                             <td>{dado.email}</td>
                             <td>{dado.tel}</td>
                             <td>{dado.ocupacao}</td>
-                            <td>{dado.carga_horaria_prof}</td> 
+                            <td>{dado.carga_horaria_prof}</td>
                         </tr>
                     ))}
                 </tbody>
